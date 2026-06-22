@@ -4,7 +4,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const MODEL = "google/gemini-3-flash-preview";
 
-async function callAI(system: string, user: string): Promise<{ text: string }> {
+type Content = string | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
+
+async function callAI(system: string, user: Content): Promise<{ text: string }> {
   const key = process.env.LOVABLE_API_KEY;
   if (!key) throw new Error("LOVABLE_API_KEY missing");
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -134,4 +136,68 @@ export const scanStats = createServerFn({ method: "POST" })
     const avg = total ? Math.round(data.reduce((a, s) => a + s.risk_score, 0) / total) : 0;
     const trustScore = Math.max(0, 100 - avg);
     return { total, safe, risky, trustScore };
+  });
+
+/* ---------------- Shopping site scan ---------------- */
+export const scanShopping = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ url: z.string().url().max(2000) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const system = `You are an e-commerce fraud analyst. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences for shoppers","signals":["red flags"]}. Look for fake stores, brand impersonation, unrealistic discounts, suspicious payment options, missing contact info, lookalike domains, dropshipping scams.`;
+    const { text } = await callAI(system, `Shopping URL: ${data.url}\nReturn JSON only.`);
+    const parsed = parseVerdict(text);
+    const { data: saved, error } = await context.supabase.from("scans").insert({
+      user_id: context.userId, scan_type: "shopping", input: data.url,
+      risk_score: parsed.risk_score, verdict: parsed.verdict, explanation: parsed.explanation,
+      details: { signals: parsed.signals },
+    }).select().single();
+    if (error) throw new Error(error.message);
+    return { ...parsed, id: saved.id };
+  });
+
+/* ---------------- Image-based scans (QR, payment, deepfake, document) ---------------- */
+const ImageKind = z.enum(["qr", "payment", "deepfake", "document"]);
+
+const KIND_PROMPTS: Record<z.infer<typeof ImageKind>, { label: string; system: string }> = {
+  qr: {
+    label: "QR Code",
+    system: `You are a QR code safety analyst. Decode/read the QR content in the image and analyze the destination. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences (include the decoded URL/text)","signals":["red flags"]}. Flag phishing URLs, payment requests, suspicious shorteners, UPI/crypto scams.`,
+  },
+  payment: {
+    label: "Payment Screenshot",
+    system: `You are a payment-fraud analyst. Examine the payment confirmation screenshot (UPI / bank / wallet / receipt). Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences","signals":["red flags"]}. Flag mismatched fonts, edited amounts, fake transaction IDs, status inconsistencies, watermark issues, common forgery patterns.`,
+  },
+  deepfake: {
+    label: "Deepfake / Image Authenticity",
+    system: `You are a media-authenticity analyst. Look for signs the image is AI-generated, deepfaked, or manipulated. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences","signals":["specific artifacts"]}. Note: this is heuristic; never claim 100% certainty.`,
+  },
+  document: {
+    label: "Document Verification",
+    system: `You are a document-fraud analyst. Examine the ID/certificate/document image. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences","signals":["specific concerns"]}. Flag template mismatches, font inconsistencies, missing security features, edited fields, low-quality reproductions.`,
+  },
+};
+
+export const scanImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({
+      kind: ImageKind,
+      dataUrl: z.string().startsWith("data:image/").max(8_000_000),
+      filename: z.string().max(200).optional(),
+    }).parse(d)
+  )
+  .handler(async ({ data, context }) => {
+    const cfg = KIND_PROMPTS[data.kind];
+    const { text } = await callAI(cfg.system, [
+      { type: "text", text: `Analyze this image as a ${cfg.label}. Return JSON only.` },
+      { type: "image_url", image_url: { url: data.dataUrl } },
+    ]);
+    const parsed = parseVerdict(text);
+    const { data: saved, error } = await context.supabase.from("scans").insert({
+      user_id: context.userId, scan_type: data.kind, input: data.filename ?? `${cfg.label} upload`,
+      risk_score: parsed.risk_score, verdict: parsed.verdict, explanation: parsed.explanation,
+      details: { signals: parsed.signals },
+    }).select().single();
+    if (error) throw new Error(error.message);
+    return { ...parsed, id: saved.id };
   });
