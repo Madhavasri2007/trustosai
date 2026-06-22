@@ -15,11 +15,18 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedScanWebsiteRouteImport } from './routes/_authenticated/scan.website'
+import { Route as AuthenticatedScanShoppingRouteImport } from './routes/_authenticated/scan.shopping'
+import { Route as AuthenticatedScanQrRouteImport } from './routes/_authenticated/scan.qr'
+import { Route as AuthenticatedScanPaymentRouteImport } from './routes/_authenticated/scan.payment'
 import { Route as AuthenticatedScanPasswordRouteImport } from './routes/_authenticated/scan.password'
 import { Route as AuthenticatedScanEmailRouteImport } from './routes/_authenticated/scan.email'
+import { Route as AuthenticatedScanDocumentRouteImport } from './routes/_authenticated/scan.document'
+import { Route as AuthenticatedScanDeepfakeRouteImport } from './routes/_authenticated/scan.deepfake'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -50,6 +57,11 @@ const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -60,10 +72,32 @@ const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
   path: '/assistant',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedScanWebsiteRoute =
   AuthenticatedScanWebsiteRouteImport.update({
     id: '/scan/website',
     path: '/scan/website',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedScanShoppingRoute =
+  AuthenticatedScanShoppingRouteImport.update({
+    id: '/scan/shopping',
+    path: '/scan/shopping',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedScanQrRoute = AuthenticatedScanQrRouteImport.update({
+  id: '/scan/qr',
+  path: '/scan/qr',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedScanPaymentRoute =
+  AuthenticatedScanPaymentRouteImport.update({
+    id: '/scan/payment',
+    path: '/scan/payment',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedScanPasswordRoute =
@@ -77,29 +111,55 @@ const AuthenticatedScanEmailRoute = AuthenticatedScanEmailRouteImport.update({
   path: '/scan/email',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedScanDocumentRoute =
+  AuthenticatedScanDocumentRouteImport.update({
+    id: '/scan/document',
+    path: '/scan/document',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedScanDeepfakeRoute =
+  AuthenticatedScanDeepfakeRouteImport.update({
+    id: '/scan/deepfake',
+    path: '/scan/deepfake',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/api/chat': typeof ApiChatRoute
+  '/scan/deepfake': typeof AuthenticatedScanDeepfakeRoute
+  '/scan/document': typeof AuthenticatedScanDocumentRoute
   '/scan/email': typeof AuthenticatedScanEmailRoute
   '/scan/password': typeof AuthenticatedScanPasswordRoute
+  '/scan/payment': typeof AuthenticatedScanPaymentRoute
+  '/scan/qr': typeof AuthenticatedScanQrRoute
+  '/scan/shopping': typeof AuthenticatedScanShoppingRoute
   '/scan/website': typeof AuthenticatedScanWebsiteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/api/chat': typeof ApiChatRoute
+  '/scan/deepfake': typeof AuthenticatedScanDeepfakeRoute
+  '/scan/document': typeof AuthenticatedScanDocumentRoute
   '/scan/email': typeof AuthenticatedScanEmailRoute
   '/scan/password': typeof AuthenticatedScanPasswordRoute
+  '/scan/payment': typeof AuthenticatedScanPaymentRoute
+  '/scan/qr': typeof AuthenticatedScanQrRoute
+  '/scan/shopping': typeof AuthenticatedScanShoppingRoute
   '/scan/website': typeof AuthenticatedScanWebsiteRoute
 }
 export interface FileRoutesById {
@@ -108,12 +168,19 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/api/chat': typeof ApiChatRoute
+  '/_authenticated/scan/deepfake': typeof AuthenticatedScanDeepfakeRoute
+  '/_authenticated/scan/document': typeof AuthenticatedScanDocumentRoute
   '/_authenticated/scan/email': typeof AuthenticatedScanEmailRoute
   '/_authenticated/scan/password': typeof AuthenticatedScanPasswordRoute
+  '/_authenticated/scan/payment': typeof AuthenticatedScanPaymentRoute
+  '/_authenticated/scan/qr': typeof AuthenticatedScanQrRoute
+  '/_authenticated/scan/shopping': typeof AuthenticatedScanShoppingRoute
   '/_authenticated/scan/website': typeof AuthenticatedScanWebsiteRoute
 }
 export interface FileRouteTypes {
@@ -122,24 +189,38 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/sitemap.xml'
+    | '/admin'
     | '/assistant'
     | '/dashboard'
+    | '/profile'
     | '/reports'
     | '/api/chat'
+    | '/scan/deepfake'
+    | '/scan/document'
     | '/scan/email'
     | '/scan/password'
+    | '/scan/payment'
+    | '/scan/qr'
+    | '/scan/shopping'
     | '/scan/website'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/sitemap.xml'
+    | '/admin'
     | '/assistant'
     | '/dashboard'
+    | '/profile'
     | '/reports'
     | '/api/chat'
+    | '/scan/deepfake'
+    | '/scan/document'
     | '/scan/email'
     | '/scan/password'
+    | '/scan/payment'
+    | '/scan/qr'
+    | '/scan/shopping'
     | '/scan/website'
   id:
     | '__root__'
@@ -147,12 +228,19 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/sitemap.xml'
+    | '/_authenticated/admin'
     | '/_authenticated/assistant'
     | '/_authenticated/dashboard'
+    | '/_authenticated/profile'
     | '/_authenticated/reports'
     | '/api/chat'
+    | '/_authenticated/scan/deepfake'
+    | '/_authenticated/scan/document'
     | '/_authenticated/scan/email'
     | '/_authenticated/scan/password'
+    | '/_authenticated/scan/payment'
+    | '/_authenticated/scan/qr'
+    | '/_authenticated/scan/shopping'
     | '/_authenticated/scan/website'
   fileRoutesById: FileRoutesById
 }
@@ -208,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -222,11 +317,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAssistantRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/scan/website': {
       id: '/_authenticated/scan/website'
       path: '/scan/website'
       fullPath: '/scan/website'
       preLoaderRoute: typeof AuthenticatedScanWebsiteRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/scan/shopping': {
+      id: '/_authenticated/scan/shopping'
+      path: '/scan/shopping'
+      fullPath: '/scan/shopping'
+      preLoaderRoute: typeof AuthenticatedScanShoppingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/scan/qr': {
+      id: '/_authenticated/scan/qr'
+      path: '/scan/qr'
+      fullPath: '/scan/qr'
+      preLoaderRoute: typeof AuthenticatedScanQrRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/scan/payment': {
+      id: '/_authenticated/scan/payment'
+      path: '/scan/payment'
+      fullPath: '/scan/payment'
+      preLoaderRoute: typeof AuthenticatedScanPaymentRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/scan/password': {
@@ -243,24 +366,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedScanEmailRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/scan/document': {
+      id: '/_authenticated/scan/document'
+      path: '/scan/document'
+      fullPath: '/scan/document'
+      preLoaderRoute: typeof AuthenticatedScanDocumentRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/scan/deepfake': {
+      id: '/_authenticated/scan/deepfake'
+      path: '/scan/deepfake'
+      fullPath: '/scan/deepfake'
+      preLoaderRoute: typeof AuthenticatedScanDeepfakeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedScanDeepfakeRoute: typeof AuthenticatedScanDeepfakeRoute
+  AuthenticatedScanDocumentRoute: typeof AuthenticatedScanDocumentRoute
   AuthenticatedScanEmailRoute: typeof AuthenticatedScanEmailRoute
   AuthenticatedScanPasswordRoute: typeof AuthenticatedScanPasswordRoute
+  AuthenticatedScanPaymentRoute: typeof AuthenticatedScanPaymentRoute
+  AuthenticatedScanQrRoute: typeof AuthenticatedScanQrRoute
+  AuthenticatedScanShoppingRoute: typeof AuthenticatedScanShoppingRoute
   AuthenticatedScanWebsiteRoute: typeof AuthenticatedScanWebsiteRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedScanDeepfakeRoute: AuthenticatedScanDeepfakeRoute,
+  AuthenticatedScanDocumentRoute: AuthenticatedScanDocumentRoute,
   AuthenticatedScanEmailRoute: AuthenticatedScanEmailRoute,
   AuthenticatedScanPasswordRoute: AuthenticatedScanPasswordRoute,
+  AuthenticatedScanPaymentRoute: AuthenticatedScanPaymentRoute,
+  AuthenticatedScanQrRoute: AuthenticatedScanQrRoute,
+  AuthenticatedScanShoppingRoute: AuthenticatedScanShoppingRoute,
   AuthenticatedScanWebsiteRoute: AuthenticatedScanWebsiteRoute,
 }
 

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { recentScans, scanStats } from "@/lib/scans.functions";
-import { Globe, Mail, Lock, MessageSquare, Bot, ShieldCheck, AlertTriangle, Activity, FileSearch } from "lucide-react";
+import { Globe, Mail, Lock, MessageSquare, Bot, ShieldCheck, AlertTriangle, Activity, FileSearch, QrCode, Receipt, ShoppingBag, Scan, FileCheck2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — TrustOS AI" }] }),
@@ -11,7 +11,12 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 const quick = [
   { to: "/scan/website", label: "Scan Website", icon: Globe },
+  { to: "/scan/shopping", label: "Shopping Site", icon: ShoppingBag },
+  { to: "/scan/qr", label: "QR Code", icon: QrCode },
   { to: "/scan/email", label: "Scan Email", icon: Mail },
+  { to: "/scan/payment", label: "Payment Receipt", icon: Receipt },
+  { to: "/scan/deepfake", label: "Deepfake", icon: Scan },
+  { to: "/scan/document", label: "Document", icon: FileCheck2 },
   { to: "/scan/password", label: "Check Password", icon: Lock },
   { to: "/reports", label: "Scam Reports", icon: MessageSquare },
   { to: "/assistant", label: "Ask AI", icon: Bot },

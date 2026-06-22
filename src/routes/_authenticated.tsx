@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, LayoutDashboard, Globe, Mail, Lock, MessageSquare, Bot, LogOut } from "lucide-react";
+import { Shield, LayoutDashboard, Globe, Mail, Lock, MessageSquare, Bot, LogOut, QrCode, Receipt, ShoppingBag, Scan, FileCheck2, UserCircle2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -44,10 +44,17 @@ function AuthGate() {
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/scan/website", label: "Website", icon: Globe },
+  { to: "/scan/shopping", label: "Shopping Site", icon: ShoppingBag },
+  { to: "/scan/qr", label: "QR Code", icon: QrCode },
   { to: "/scan/email", label: "Email", icon: Mail },
+  { to: "/scan/payment", label: "Payment Screenshot", icon: Receipt },
+  { to: "/scan/deepfake", label: "Deepfake", icon: Scan },
+  { to: "/scan/document", label: "Document", icon: FileCheck2 },
   { to: "/scan/password", label: "Password", icon: Lock },
   { to: "/reports", label: "Scam Reports", icon: MessageSquare },
   { to: "/assistant", label: "AI Assistant", icon: Bot },
+  { to: "/profile", label: "Profile", icon: UserCircle2 },
+  { to: "/admin", label: "Admin", icon: ShieldAlert },
 ] as const;
 
 function Sidebar({ email }: { email: string | null }) {
