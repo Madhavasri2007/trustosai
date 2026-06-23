@@ -1,18 +1,18 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
 
 const Category = z.enum(["website", "phone", "email", "upi", "message", "other"]);
 
 export const listReports = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ search: z.string().max(200).optional() }).parse(d ?? {}))
-  .handler(async ({ data }) => {
-    const sb = createClient<Database>(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
-      auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-    });
-    let q = sb.from("reports").select("id, category, target, description, created_at").order("created_at", { ascending: false }).limit(100);
+  .handler(async ({ data, context }) => {
+    let q = context.supabase
+      .from("reports")
+      .select("id, category, target, description, created_at")
+      .order("created_at", { ascending: false })
+      .limit(100);
     if (data.search) q = q.or(`target.ilike.%${data.search}%,description.ilike.%${data.search}%`);
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
