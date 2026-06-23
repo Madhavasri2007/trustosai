@@ -169,7 +169,16 @@ const KIND_PROMPTS: Record<z.infer<typeof ImageKind>, { label: string; system: s
   },
   deepfake: {
     label: "Deepfake / Image Authenticity",
-    system: `You are a media-authenticity analyst. Look for signs the image is AI-generated, deepfaked, or manipulated. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences","signals":["specific artifacts"]}. Note: this is heuristic; never claim 100% certainty.`,
+    system: `You are a careful media-authenticity analyst. Decide whether an image is likely AUTHENTIC (real camera capture) or LIKELY AI-GENERATED / DEEPFAKED / MANIPULATED. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences citing the strongest evidence","signals":["specific artifact or reason"]}.
+
+SCORING RULES — be conservative, avoid false positives:
+- Default assumption is AUTHENTIC. Only raise risk when you see SPECIFIC, NAMED artifacts.
+- 0-20 SAFE  : Looks like a real photo. Natural lighting, consistent skin texture/pores, realistic asymmetry, sharp irises, correct fingers/teeth/ears, clean background geometry. Normal compression/blur/low-light is NOT evidence of fakery.
+- 21-45 CAUTION: One or two minor anomalies that could also be camera/compression artifacts.
+- 46-70 WARNING: Multiple concrete AI/manipulation signs (e.g. melted fingers, asymmetric earrings, glitched text, smeared background, mismatched lighting on face vs scene, plastic skin, unnatural eye reflections).
+- 71-100 DANGER: Strong, obvious AI generation or face-swap evidence.
+
+IMPORTANT: Do not flag an image just because it is high quality, well-lit, posed, edited, color-graded, or a selfie. Phone HDR, beauty filters, and ordinary retouching are NOT deepfakes. If unsure, lean SAFE and say so. Never claim 100% certainty.`,
   },
   document: {
     label: "Document Verification",
@@ -182,16 +191,30 @@ export const scanImage = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
     z.object({
       kind: ImageKind,
-      dataUrl: z.string().startsWith("data:image/").max(8_000_000),
+      dataUrl: z.string().max(10_000_000).refine(
+        (s) => s.startsWith("data:image/") || s.startsWith("data:application/pdf"),
+        "Only image or PDF data URLs are accepted"
+      ),
       filename: z.string().max(200).optional(),
     }).parse(d)
   )
   .handler(async ({ data, context }) => {
     const cfg = KIND_PROMPTS[data.kind];
-    const { text } = await callAI(cfg.system, [
-      { type: "text", text: `Analyze this image as a ${cfg.label}. Return JSON only.` },
-      { type: "image_url", image_url: { url: data.dataUrl } },
-    ]);
+    const isPdf = data.dataUrl.startsWith("data:application/pdf");
+    if (isPdf && data.kind !== "document") {
+      throw new Error("PDF uploads are only supported for document verification.");
+    }
+    const userBlocks: Content = isPdf
+      ? [
+          { type: "text", text: `Analyze this PDF as a ${cfg.label}. Return JSON only.` },
+          // Gemini via Lovable gateway accepts file blocks for PDFs
+          { type: "image_url", image_url: { url: data.dataUrl } } as any,
+        ]
+      : [
+          { type: "text", text: `Analyze this image as a ${cfg.label}. Return JSON only.` },
+          { type: "image_url", image_url: { url: data.dataUrl } },
+        ];
+    const { text } = await callAI(cfg.system, userBlocks);
     const parsed = parseVerdict(text);
     const { data: saved, error } = await context.supabase.from("scans").insert({
       user_id: context.userId, scan_type: data.kind, input: data.filename ?? `${cfg.label} upload`,
