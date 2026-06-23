@@ -82,10 +82,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "AI-powered digital trust verification: scan websites, emails, passwords and report scams." },
       { name: "author", content: "TrustOS AI" },
       { property: "og:title", content: "TrustOS AI — Verify Before You Trust" },
-      { property: "og:description", content: "AI-powered digital trust verification platform." },
+      { property: "og:description", content: "AI-powered digital trust verification: scan websites, emails, passwords and report scams." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "TrustOS AI — Verify Before You Trust" },
+      { name: "twitter:description", content: "AI-powered digital trust verification: scan websites, emails, passwords and report scams." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/00898466-900c-4492-83e0-36c4c62ca25f/id-preview-456431ba--2b75606b-81c5-462c-b011-8b0900527e8b.lovable.app-1782204425294.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/00898466-900c-4492-83e0-36c4c62ca25f/id-preview-456431ba--2b75606b-81c5-462c-b011-8b0900527e8b.lovable.app-1782204425294.png" },
     ],
     links: [
       {
