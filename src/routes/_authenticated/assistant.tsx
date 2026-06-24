@@ -79,7 +79,7 @@ function Page() {
         <div className="h-10 w-10 rounded-xl bg-primary/15 text-primary flex items-center justify-center"><Bot className="h-5 w-5" /></div>
         <div>
           <h1 className="font-semibold">AI Security Assistant</h1>
-          <p className="text-xs text-muted-foreground">Powered by Lovable AI</p>
+          <p className="text-xs text-muted-foreground">Powered by TrustOS AI</p>
         </div>
       </header>
       <div ref={scrollRef} className="flex-1 overflow-auto px-6 py-6">
