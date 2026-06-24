@@ -1,3 +1,4 @@
+import { safeThrow } from "@/lib/safe-error";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -15,7 +16,7 @@ export const listReports = createServerFn({ method: "POST" })
       .limit(100);
     if (data.search) q = q.or(`target.ilike.%${data.search}%,description.ilike.%${data.search}%`);
     const { data: rows, error } = await q;
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return rows ?? [];
   });
 
@@ -35,6 +36,6 @@ export const createReport = createServerFn({ method: "POST" })
       target: data.target,
       description: data.description,
     });
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return { ok: true };
   });
