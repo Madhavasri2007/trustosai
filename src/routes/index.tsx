@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Shield, Globe, QrCode, Mail, CreditCard, Eye, FileCheck, Lock, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroImg from "@/assets/hero-shield.jpg";
+import heroImg from "@/assets/hero-shield.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -11,6 +11,9 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Scan websites, emails, passwords, and payment screenshots with AI to detect scams and digital threats before they reach you." },
       { property: "og:title", content: "TrustOS AI — Verify Before You Trust" },
       { property: "og:description", content: "AI-powered digital trust verification platform." },
+    ],
+    links: [
+      { rel: "preload", as: "image", href: heroImg, fetchpriority: "high" },
     ],
   }),
   component: Landing,
@@ -79,8 +82,11 @@ function Landing() {
             <img
               src={heroImg}
               alt="Glowing digital shield representing AI cybersecurity"
-              width={1536}
-              height={1024}
+              width={960}
+              height={540}
+              fetchPriority="high"
+              decoding="async"
+              loading="eager"
               className="relative rounded-2xl border border-border shadow-2xl"
             />
           </div>
