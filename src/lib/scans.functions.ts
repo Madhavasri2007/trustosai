@@ -1,3 +1,4 @@
+import { safeThrow } from "@/lib/safe-error";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -84,7 +85,7 @@ export const scanWebsite = createServerFn({ method: "POST" })
       })
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return { ...parsed, signals: allSignals, id: saved.id };
   });
 
@@ -109,7 +110,7 @@ export const scanEmail = createServerFn({ method: "POST" })
       })
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return { ...parsed, id: saved.id };
   });
 
@@ -122,7 +123,7 @@ export const recentScans = createServerFn({ method: "POST" })
       .select("id, scan_type, input, risk_score, verdict, created_at")
       .order("created_at", { ascending: false })
       .limit(20);
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return data ?? [];
   });
 
@@ -132,7 +133,7 @@ export const scanStats = createServerFn({ method: "POST" })
     const { data, error } = await context.supabase
       .from("scans")
       .select("risk_score, verdict");
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     const total = data.length;
     const safe = data.filter((s) => s.verdict === "SAFE").length;
     const risky = data.filter((s) => s.verdict === "WARNING" || s.verdict === "DANGER").length;
@@ -157,7 +158,7 @@ export const scanShopping = createServerFn({ method: "POST" })
       risk_score: parsed.risk_score, verdict: parsed.verdict, explanation: parsed.explanation,
       details: { signals: parsed.signals },
     }).select().single();
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return { ...parsed, id: saved.id };
   });
 
@@ -227,6 +228,6 @@ export const scanImage = createServerFn({ method: "POST" })
       risk_score: parsed.risk_score, verdict: parsed.verdict, explanation: parsed.explanation,
       details: { signals: parsed.signals },
     }).select().single();
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return { ...parsed, id: saved.id };
   });

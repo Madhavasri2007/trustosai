@@ -1,3 +1,4 @@
+import { safeThrow } from "@/lib/safe-error";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -26,6 +27,6 @@ export const updateProfile = createServerFn({ method: "POST" })
     const { error } = await context.supabase
       .from("profiles").update({ display_name: data.display_name, updated_at: new Date().toISOString() })
       .eq("id", context.userId);
-    if (error) throw new Error(error.message);
+    if (error) safeThrow(error, "db");
     return { ok: true };
   });
