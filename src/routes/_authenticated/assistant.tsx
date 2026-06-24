@@ -14,7 +14,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 function Page() {
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Hi! I'm your TrustOS Assistant. Ask me if a link, email, or message looks safe — or anything about staying secure online." },
+    { role: "assistant", content: "Hi! I'm TrustOS AI. Paste any link, message, or question — I'll tell you fast if it's safe or risky, in simple words." },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
