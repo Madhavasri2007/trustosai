@@ -6,6 +6,9 @@ const MODEL = "google/gemini-3-flash-preview";
 
 type Content = string | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
 
+const CONSEQUENCES_RULE =
+  "If risk_score >= 40, ALSO append 2-3 plain-English real-world consequences the user could face (e.g. money stolen from bank/UPI, password or OTP leaked, account hacked, identity misused, phone infected with malware, blackmail with photos) as extra entries in the signals array, each prefixed with 'If you use this: '. Keep every signal short and non-technical so a first-time internet user understands instantly.";
+
 async function callAI(system: string, user: Content): Promise<{ text: string }> {
   const key = process.env.LOVABLE_API_KEY;
   if (!key) throw new Error("LOVABLE_API_KEY missing");
@@ -61,7 +64,7 @@ export const scanWebsite = createServerFn({ method: "POST" })
     if (/(login|verify|secure|update|bank|wallet|gift)/i.test(u.pathname)) heuristics.push("URL path uses sensitive keywords.");
     if (u.hostname.length > 40) heuristics.push("Very long hostname.");
 
-    const system = `You are a cybersecurity analyst. Analyze a URL and return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"plain english, 2-3 sentences for non-technical users","signals":["short bullet","..."]}. Lower score = safer. Consider phishing patterns, lookalike domains, suspicious TLDs, brand impersonation, structure.`;
+    const system = `You are a cybersecurity analyst. Analyze a URL and return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"plain english, 2-3 sentences for non-technical users","signals":["short bullet","..."]}. Lower score = safer. Consider phishing patterns, lookalike domains, suspicious TLDs, brand impersonation, structure. ${CONSEQUENCES_RULE}`;
     const user = `URL: ${url}\nClient-side heuristics already detected: ${heuristics.join(" | ") || "none"}.\nReturn JSON only.`;
 
     const { text } = await callAI(system, user);
@@ -90,7 +93,7 @@ export const scanEmail = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ content: z.string().min(20).max(10000) }).parse(d))
   .handler(async ({ data, context }) => {
-    const system = `You are a phishing/scam-email analyst. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentence plain explanation","signals":["specific red flags"]}. Look for urgency, fake links, sender spoofing, prize/payment scams, credential harvesting.`;
+    const system = `You are a phishing/scam-email analyst. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentence plain explanation","signals":["specific red flags"]}. Look for urgency, fake links, sender spoofing, prize/payment scams, credential harvesting. ${CONSEQUENCES_RULE}`;
     const { text } = await callAI(system, `Email content:\n"""${data.content}"""\nReturn JSON only.`);
     const parsed = parseVerdict(text);
     const { data: saved, error } = await context.supabase
@@ -133,8 +136,11 @@ export const scanStats = createServerFn({ method: "POST" })
     const total = data.length;
     const safe = data.filter((s) => s.verdict === "SAFE").length;
     const risky = data.filter((s) => s.verdict === "WARNING" || s.verdict === "DANGER").length;
-    const avg = total ? Math.round(data.reduce((a, s) => a + s.risk_score, 0) / total) : 0;
-    const trustScore = Math.max(0, 100 - avg);
+    const danger = data.filter((s) => s.verdict === "DANGER").length;
+    const warning = data.filter((s) => s.verdict === "WARNING").length;
+    const trustScore = total === 0
+      ? 100
+      : Math.max(70, 100 - Math.round((danger * 12 + warning * 5) / total));
     return { total, safe, risky, trustScore };
   });
 
@@ -143,7 +149,7 @@ export const scanShopping = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ url: z.string().url().max(2000) }).parse(d))
   .handler(async ({ data, context }) => {
-    const system = `You are an e-commerce fraud analyst. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences for shoppers","signals":["red flags"]}. Look for fake stores, brand impersonation, unrealistic discounts, suspicious payment options, missing contact info, lookalike domains, dropshipping scams.`;
+    const system = `You are an e-commerce fraud analyst. Return STRICT JSON: {"risk_score":0-100,"verdict":"SAFE|CAUTION|WARNING|DANGER","explanation":"2-3 sentences for shoppers","signals":["red flags"]}. Look for fake stores, brand impersonation, unrealistic discounts, suspicious payment options, missing contact info, lookalike domains, dropshipping scams. ${CONSEQUENCES_RULE}`;
     const { text } = await callAI(system, `Shopping URL: ${data.url}\nReturn JSON only.`);
     const parsed = parseVerdict(text);
     const { data: saved, error } = await context.supabase.from("scans").insert({

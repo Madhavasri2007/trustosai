@@ -14,7 +14,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 function Page() {
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Hi! I'm your TrustOS Assistant. Ask me if a link, email, or message looks safe — or anything about staying secure online." },
+    { role: "assistant", content: "Hi! I'm TrustOS AI. Paste any link, message, or question — I'll tell you fast if it's safe or risky, in simple words." },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -79,7 +79,7 @@ function Page() {
         <div className="h-10 w-10 rounded-xl bg-primary/15 text-primary flex items-center justify-center"><Bot className="h-5 w-5" /></div>
         <div>
           <h1 className="font-semibold">AI Security Assistant</h1>
-          <p className="text-xs text-muted-foreground">Powered by Lovable AI</p>
+          <p className="text-xs text-muted-foreground">Powered by TrustOS AI</p>
         </div>
       </header>
       <div ref={scrollRef} className="flex-1 overflow-auto px-6 py-6">

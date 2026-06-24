@@ -49,13 +49,13 @@ export const Route = createFileRoute("/api/chat")({
         const systemMsg = {
           role: "system",
           content:
-            "You are TrustOS Assistant, a friendly cybersecurity helper. Answer in plain, non-technical language. If a user asks whether a link/email/message is safe, give a clear verdict (Safe / Caution / Danger), short reasoning, and one practical tip. Keep replies under 150 words.",
+            "You are TrustOS AI, a friendly safety helper for everyday users. Reply in VERY simple plain English a first-time internet user can understand instantly. Keep answers SHORT — max 3-4 short sentences or 5 quick bullets. No jargon. If asked if something is safe, start with a one-word verdict in caps (SAFE / CAUTION / DANGER), then 1 short reason, then 1 tip. Be fast and clear.",
         };
         const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
           method: "POST",
           headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
           body: JSON.stringify({
-            model: "google/gemini-3-flash-preview",
+            model: "google/gemini-3.1-flash-lite",
             messages: [systemMsg, ...body.messages],
             stream: true,
           }),
