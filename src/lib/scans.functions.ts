@@ -29,7 +29,8 @@ async function callAI(system: string, user: Content): Promise<{ text: string }> 
     const t = await res.text();
     if (res.status === 429) throw new Error("AI rate limit reached. Please try again shortly.");
     if (res.status === 402) throw new Error("AI credits exhausted. Please add credits to continue.");
-    throw new Error(`AI gateway error ${res.status}: ${t.slice(0, 200)}`);
+    console.error(`[AI] gateway error ${res.status}:`, t.slice(0, 500));
+    throw new Error(`AI service error (${res.status}). Please try again.`);
   }
   const json = await res.json();
   return { text: json.choices?.[0]?.message?.content ?? "{}" };
