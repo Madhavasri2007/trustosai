@@ -63,7 +63,7 @@ function Landing() {
   return (
     <div className="min-h-screen">
       <Header />
-
+      <main>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center px-6 pt-20 pb-24">
@@ -169,7 +169,7 @@ function Landing() {
           </div>
         </div>
       </section>
-
+      </main>
       <Footer />
     </div>
   );
