@@ -8,7 +8,16 @@ import { ShieldAlert, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Admin — TrustOS AI" },
+      { name: "description", content: "Moderate scam reports, manage users, and review scan activity across TrustOS AI." },
+      { property: "og:title", content: "Admin Dashboard — TrustOS AI" },
+      { property: "og:description", content: "Moderate scam reports, manage users, and review scan activity across TrustOS AI." },
+      { property: "og:url", content: "https://trustosai.lovable.app/admin" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/admin" }],
+  }),
   component: Page,
 });
 

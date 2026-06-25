@@ -10,7 +10,16 @@ import { toast } from "sonner";
 import { ShoppingBag } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/scan/shopping")({
-  head: () => ({ meta: [{ title: "Shopping Site Checker — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Shopping Site Checker — TrustOS AI" },
+      { name: "description", content: "Check e-commerce stores for fake-shop signals, missing trust badges, and high-risk patterns before you pay." },
+      { property: "og:title", content: "Shopping Site Checker — TrustOS AI" },
+      { property: "og:description", content: "Check e-commerce stores for fake-shop signals, missing trust badges, and high-risk patterns before you pay." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/shopping" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/shopping" }],
+  }),
   component: Page,
 });
 

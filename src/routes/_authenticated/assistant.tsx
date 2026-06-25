@@ -6,7 +6,16 @@ import { Bot, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
-  head: () => ({ meta: [{ title: "AI Assistant — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "AI Assistant — TrustOS AI" },
+      { name: "description", content: "Chat with the TrustOS AI safety assistant — paste any link, message, or question for a quick safe-or-risky verdict." },
+      { property: "og:title", content: "TrustOS AI Assistant — TrustOS AI" },
+      { property: "og:description", content: "Chat with the TrustOS AI safety assistant — paste any link, message, or question for a quick safe-or-risky verdict." },
+      { property: "og:url", content: "https://trustosai.lovable.app/assistant" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/assistant" }],
+  }),
   component: Page,
 });
 

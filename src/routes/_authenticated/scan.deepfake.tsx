@@ -4,7 +4,16 @@ import { ImageScanCard } from "@/components/ImageScanCard";
 import { ScanPageHeader } from "@/components/ScanPageHeader";
 
 export const Route = createFileRoute("/_authenticated/scan/deepfake")({
-  head: () => ({ meta: [{ title: "Deepfake Detector — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Deepfake Detector — TrustOS AI" },
+      { name: "description", content: "Upload a photo to scan for signs of AI generation, face swaps, or image manipulation with TrustOS AI." },
+      { property: "og:title", content: "Deepfake Detector — TrustOS AI" },
+      { property: "og:description", content: "Upload a photo to scan for signs of AI generation, face swaps, or image manipulation with TrustOS AI." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/deepfake" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/deepfake" }],
+  }),
   component: Page,
 });
 
