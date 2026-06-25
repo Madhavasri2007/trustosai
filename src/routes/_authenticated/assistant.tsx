@@ -98,7 +98,7 @@ function Page() {
       <form onSubmit={(e) => { e.preventDefault(); send(); }} className="border-t border-border/50 p-4">
         <div className="max-w-3xl mx-auto flex gap-2">
           <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask me about a link, email, or anything security…" disabled={loading} />
-          <Button type="submit" disabled={loading || !input.trim()} className="btn-hero"><Send className="h-4 w-4" /></Button>
+          <Button type="submit" disabled={loading || !input.trim()} className="btn-hero" aria-label="Send message"><Send className="h-4 w-4" /></Button>
         </div>
       </form>
     </div>
