@@ -9,7 +9,16 @@ import { toast } from "sonner";
 import { Globe } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/scan/website")({
-  head: () => ({ meta: [{ title: "Website Scanner — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Website Scanner — TrustOS AI" },
+      { name: "description", content: "Get an instant trust score for any URL — SSL, domain age, blacklists, redirects, and AI risk signals." },
+      { property: "og:title", content: "Website Safety Scanner — TrustOS AI" },
+      { property: "og:description", content: "Get an instant trust score for any URL — SSL, domain age, blacklists, redirects, and AI risk signals." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/website" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/website" }],
+  }),
   component: Page,
 });
 

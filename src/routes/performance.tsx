@@ -8,7 +8,9 @@ export const Route = createFileRoute("/performance")({
       { name: "description", content: "Lighthouse metrics before and after hero image optimization on TrustOS AI." },
       { property: "og:title", content: "Performance Report — TrustOS AI" },
       { property: "og:description", content: "LCP, FCP and Speed Index improvements after switching the hero to WebP with preload." },
+      { property: "og:url", content: "https://trustosai.lovable.app/performance" },
     ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/performance" }],
   }),
   component: PerformancePage,
 });

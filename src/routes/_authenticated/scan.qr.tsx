@@ -4,7 +4,16 @@ import { ImageScanCard } from "@/components/ImageScanCard";
 import { ScanPageHeader } from "@/components/ScanPageHeader";
 
 export const Route = createFileRoute("/_authenticated/scan/qr")({
-  head: () => ({ meta: [{ title: "QR Code Scanner — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "QR Code Scanner — TrustOS AI" },
+      { name: "description", content: "Upload or capture a QR code and TrustOS AI will decode it and rate the destination for safety." },
+      { property: "og:title", content: "QR Code Safety Scanner — TrustOS AI" },
+      { property: "og:description", content: "Upload or capture a QR code and TrustOS AI will decode it and rate the destination for safety." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/qr" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/qr" }],
+  }),
   component: Page,
 });
 

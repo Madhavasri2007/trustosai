@@ -9,7 +9,16 @@ import { toast } from "sonner";
 import { Mail } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/scan/email")({
-  head: () => ({ meta: [{ title: "Email Phishing Detector — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Email Phishing Detector — TrustOS AI" },
+      { name: "description", content: "Paste an email or message and TrustOS AI will flag phishing, scams, and social-engineering tricks." },
+      { property: "og:title", content: "Email Phishing Detector — TrustOS AI" },
+      { property: "og:description", content: "Paste an email or message and TrustOS AI will flag phishing, scams, and social-engineering tricks." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/email" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/email" }],
+  }),
   component: Page,
 });
 

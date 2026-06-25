@@ -10,10 +10,28 @@ export const Route = createFileRoute("/")({
       { title: "TrustOS AI — Verify Before You Trust" },
       { name: "description", content: "Scan websites, emails, passwords, and payment screenshots with AI to detect scams and digital threats before they reach you." },
       { property: "og:title", content: "TrustOS AI — Verify Before You Trust" },
-      { property: "og:description", content: "AI-powered digital trust verification platform." },
+      { property: "og:description", content: "Scan websites, emails, passwords, and payment screenshots with AI to detect scams before they reach you." },
+      { property: "og:url", content: "https://trustosai.lovable.app/" },
+      { property: "og:image", content: "https://trustosai.lovable.app/og-home.png" },
+      { name: "twitter:image", content: "https://trustosai.lovable.app/og-home.png" },
     ],
     links: [
       { rel: "preload", as: "image", href: heroImg, fetchpriority: "high" },
+      { rel: "canonical", href: "https://trustosai.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "TrustOS AI",
+          applicationCategory: "SecurityApplication",
+          operatingSystem: "Web",
+          description: "AI-powered scanners for websites, emails, passwords, QR codes, payments, deepfakes, and documents.",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }),
+      },
     ],
   }),
   component: Landing,
@@ -45,7 +63,7 @@ function Landing() {
   return (
     <div className="min-h-screen">
       <Header />
-
+      <main>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center px-6 pt-20 pb-24">
@@ -66,7 +84,7 @@ function Landing() {
                 <Link to="/auth">Start Scanning <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base">
-                <a href="#features">Learn More</a>
+                <a href="#features">View safety features</a>
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
@@ -151,7 +169,7 @@ function Landing() {
           </div>
         </div>
       </section>
-
+      </main>
       <Footer />
     </div>
   );

@@ -11,7 +11,16 @@ import { UserCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  head: () => ({ meta: [{ title: "Profile — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Profile — TrustOS AI" },
+      { name: "description", content: "Manage your TrustOS AI display name and review your personal scan and trust statistics." },
+      { property: "og:title", content: "Your TrustOS Profile — TrustOS AI" },
+      { property: "og:description", content: "Manage your TrustOS AI display name and review your personal scan and trust statistics." },
+      { property: "og:url", content: "https://trustosai.lovable.app/profile" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/profile" }],
+  }),
   component: Page,
 });
 

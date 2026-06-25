@@ -6,7 +6,16 @@ import { Bot, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/assistant")({
-  head: () => ({ meta: [{ title: "AI Assistant — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "AI Assistant — TrustOS AI" },
+      { name: "description", content: "Chat with the TrustOS AI safety assistant — paste any link, message, or question for a quick safe-or-risky verdict." },
+      { property: "og:title", content: "TrustOS AI Assistant — TrustOS AI" },
+      { property: "og:description", content: "Chat with the TrustOS AI safety assistant — paste any link, message, or question for a quick safe-or-risky verdict." },
+      { property: "og:url", content: "https://trustosai.lovable.app/assistant" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/assistant" }],
+  }),
   component: Page,
 });
 
@@ -98,7 +107,7 @@ function Page() {
       <form onSubmit={(e) => { e.preventDefault(); send(); }} className="border-t border-border/50 p-4">
         <div className="max-w-3xl mx-auto flex gap-2">
           <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask me about a link, email, or anything security…" disabled={loading} />
-          <Button type="submit" disabled={loading || !input.trim()} className="btn-hero"><Send className="h-4 w-4" /></Button>
+          <Button type="submit" disabled={loading || !input.trim()} className="btn-hero" aria-label="Send message"><Send className="h-4 w-4" /></Button>
         </div>
       </form>
     </div>

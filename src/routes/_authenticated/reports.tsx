@@ -11,7 +11,16 @@ import { MessageSquare, Search } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/reports")({
-  head: () => ({ meta: [{ title: "Scam Reports — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Scam Reports — TrustOS AI" },
+      { name: "description", content: "Browse and submit community-reported scams across websites, phone numbers, UPI, email and messages." },
+      { property: "og:title", content: "Community Scam Reports — TrustOS AI" },
+      { property: "og:description", content: "Browse and submit community-reported scams across websites, phone numbers, UPI, email and messages." },
+      { property: "og:url", content: "https://trustosai.lovable.app/reports" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/reports" }],
+  }),
   component: Page,
 });
 

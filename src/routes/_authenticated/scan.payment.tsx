@@ -4,7 +4,16 @@ import { ImageScanCard } from "@/components/ImageScanCard";
 import { ScanPageHeader } from "@/components/ScanPageHeader";
 
 export const Route = createFileRoute("/_authenticated/scan/payment")({
-  head: () => ({ meta: [{ title: "Payment Screenshot Detector — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Payment Screenshot Detector — TrustOS AI" },
+      { name: "description", content: "Detect fake or tampered UPI, bank and payment app screenshots before you ship a product or release funds." },
+      { property: "og:title", content: "Payment Screenshot Detector — TrustOS AI" },
+      { property: "og:description", content: "Detect fake or tampered UPI, bank and payment app screenshots before you ship a product or release funds." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/payment" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/payment" }],
+  }),
   component: Page,
 });
 

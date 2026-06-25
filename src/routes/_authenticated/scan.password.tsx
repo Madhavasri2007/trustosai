@@ -5,7 +5,16 @@ import { Lock, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/scan/password")({
-  head: () => ({ meta: [{ title: "Password Health — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Password Health — TrustOS AI" },
+      { name: "description", content: "Check password strength, common patterns, and breach exposure locally — no password leaves your device." },
+      { property: "og:title", content: "Password Health Checker — TrustOS AI" },
+      { property: "og:description", content: "Check password strength, common patterns, and breach exposure locally — no password leaves your device." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/password" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/password" }],
+  }),
   component: Page,
 });
 

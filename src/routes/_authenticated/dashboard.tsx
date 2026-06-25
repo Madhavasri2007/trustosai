@@ -5,7 +5,16 @@ import { recentScans, scanStats } from "@/lib/scans.functions";
 import { Globe, Mail, Lock, MessageSquare, Bot, ShieldCheck, AlertTriangle, Activity, FileSearch, QrCode, Receipt, ShoppingBag, Scan, FileCheck2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Dashboard — TrustOS AI" },
+      { name: "description", content: "See your digital Trust Score, recent scans, and quick-launch every TrustOS AI scanner from one place." },
+      { property: "og:title", content: "Your Trust Dashboard — TrustOS AI" },
+      { property: "og:description", content: "See your digital Trust Score, recent scans, and quick-launch every TrustOS AI scanner from one place." },
+      { property: "og:url", content: "https://trustosai.lovable.app/dashboard" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/dashboard" }],
+  }),
   component: Dashboard,
 });
 

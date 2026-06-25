@@ -13,8 +13,12 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — TrustOS AI" },
-      { name: "description", content: "Sign in or create your TrustOS AI account." },
+      { name: "description", content: "Sign in or create your free TrustOS AI account to start scanning websites, emails, passwords, and payments for scams." },
+      { property: "og:title", content: "Sign in — TrustOS AI" },
+      { property: "og:description", content: "Access your TrustOS AI account to verify websites, messages and files before you trust them." },
+      { property: "og:url", content: "https://trustosai.lovable.app/auth" },
     ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/auth" }],
   }),
   component: AuthPage,
 });
@@ -66,10 +70,11 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen flex flex-col items-center justify-center px-4">
       <Link to="/" className="flex items-center gap-2 font-bold text-xl mb-8">
         <Shield className="h-7 w-7 text-primary" /> TrustOS AI
       </Link>
+      <h1 className="text-2xl font-semibold mb-6 text-center">Access Your Account</h1>
       <div className="glass w-full max-w-md rounded-2xl p-8">
         <Tabs defaultValue="signin">
           <TabsList className="grid grid-cols-2 w-full mb-6">
@@ -104,7 +109,7 @@ function AuthPage() {
           Continue with Google
         </Button>
       </div>
-    </div>
+    </main>
   );
 }
 

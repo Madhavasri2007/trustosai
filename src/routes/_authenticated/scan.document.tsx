@@ -4,7 +4,16 @@ import { ImageScanCard } from "@/components/ImageScanCard";
 import { ScanPageHeader } from "@/components/ScanPageHeader";
 
 export const Route = createFileRoute("/_authenticated/scan/document")({
-  head: () => ({ meta: [{ title: "Document Verification — TrustOS AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Document Verification — TrustOS AI" },
+      { name: "description", content: "Verify IDs, certificates and PDFs for tampering, forgery, and metadata anomalies." },
+      { property: "og:title", content: "Document Verification — TrustOS AI" },
+      { property: "og:description", content: "Verify IDs, certificates and PDFs for tampering, forgery, and metadata anomalies." },
+      { property: "og:url", content: "https://trustosai.lovable.app/scan/document" },
+    ],
+    links: [{ rel: "canonical", href: "https://trustosai.lovable.app/scan/document" }],
+  }),
   component: Page,
 });
 
