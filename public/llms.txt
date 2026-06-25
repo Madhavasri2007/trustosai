@@ -1,0 +1,16 @@
+# TrustOS AI
+
+> AI-powered digital trust verification: scan websites, emails, passwords, payment screenshots, QR codes, documents and deepfakes before you trust them.
+
+TrustOS AI helps everyday users decide what is safe online. The platform combines reputation signals, AI vision, and language analysis to flag scams, phishing, fraud, and tampered media in seconds.
+
+## Pages
+
+- [Home](/): Overview of TrustOS AI scanners and how digital trust verification works.
+- [Sign in](/auth): Create an account or sign in to start running scans.
+- [Performance report](/performance): Lighthouse metrics before and after our hero image optimization.
+
+## Optional
+
+- [Sitemap](/sitemap.xml): Machine-readable list of public pages.
+- [Robots](/robots.txt): Crawler rules for this site.
