@@ -84,7 +84,7 @@ function Landing() {
                 <Link to="/auth">Start Scanning <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base">
-                <a href="#features">Learn More</a>
+                <a href="#features">View safety features</a>
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
