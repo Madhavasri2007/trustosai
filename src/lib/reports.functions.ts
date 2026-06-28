@@ -7,14 +7,31 @@ const Category = z.enum(["website", "phone", "email", "upi", "message", "other"]
 
 export const listReports = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ search: z.string().max(200).optional() }).parse(d ?? {}))
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        search: z
+          .string()
+          .max(200)
+          .regex(/^[^,()*:]*$/, "Invalid characters in search")
+          .optional(),
+      })
+      .parse(d ?? {})
+  )
   .handler(async ({ data, context }) => {
     let q = context.supabase
       .from("reports")
       .select("id, category, target, description, created_at")
       .order("created_at", { ascending: false })
       .limit(100);
-    if (data.search) q = q.or(`target.ilike.%${data.search}%,description.ilike.%${data.search}%`);
+    if (data.search) {
+      // Escape PostgREST filter special chars and wildcards to prevent
+      // breaking out of the ilike pattern or injecting extra OR conditions.
+      const safe = data.search.replace(/[,()*%\\]/g, "");
+      if (safe.length > 0) {
+        q = q.or(`target.ilike.%${safe}%,description.ilike.%${safe}%`);
+      }
+    }
     const { data: rows, error } = await q;
     if (error) safeThrow(error, "db");
     return rows ?? [];
