@@ -5,6 +5,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { logPageView } from "@/lib/page-views.functions";
 import { Shield, LayoutDashboard, Globe, Mail, Lock, MessageSquare, Bot, LogOut, QrCode, Receipt, ShoppingBag, Scan, FileCheck2, UserCircle2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -43,9 +45,12 @@ function AuthGate() {
   return (
     <div className="min-h-screen flex">
       <Sidebar email={email} />
-      <main className="flex-1 min-w-0">
-        <Outlet />
-      </main>
+      <div className="flex-1 min-w-0 flex flex-col">
+        <MobileTopBar email={email} />
+        <main className="flex-1 min-w-0">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
@@ -103,5 +108,59 @@ function Sidebar({ email }: { email: string | null }) {
         </Button>
       </div>
     </aside>
+  );
+}
+
+function MobileTopBar({ email }: { email: string | null }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  return (
+    <header className="md:hidden sticky top-0 z-40 flex items-center justify-between gap-3 border-b border-border/60 glass rounded-none px-4 h-14">
+      <Link to="/dashboard" className="flex items-center gap-2 font-bold">
+        <Shield className="h-5 w-5 text-primary" /> TrustOS AI
+      </Link>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon" aria-label="Open menu">
+            <Menu className="h-5 w-5" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="right" className="w-72 p-4 flex flex-col">
+          <SheetTitle className="flex items-center gap-2 font-bold text-lg">
+            <Shield className="h-5 w-5 text-primary" /> TrustOS AI
+          </SheetTitle>
+          <nav className="mt-6 space-y-1 flex-1 overflow-y-auto">
+            {nav.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                  pathname === n.to
+                    ? "bg-primary/15 text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                )}
+              >
+                <n.icon className="h-4 w-4" /> {n.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="border-t border-border/50 pt-3 mt-3">
+            <div className="px-3 text-xs text-muted-foreground truncate">{email}</div>
+            <Button variant="ghost" size="sm" className="w-full justify-start mt-2" onClick={signOut}>
+              <LogOut className="h-4 w-4 mr-2" /> Sign out
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </header>
   );
 }
