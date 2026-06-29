@@ -60,18 +60,43 @@ function Page() {
           <div className="grid md:grid-cols-4 gap-4 mb-8">
             <Stat label="Total Users" value={d.stats.totalUsers} />
             <Stat label="Total Scans" value={d.stats.totalScans} />
-            <Stat label="Risky Scans" value={d.stats.riskyScans} />
+            <Stat label="Page Views" value={d.stats.totalViews} />
             <Stat label="Community Reports" value={d.stats.totalReports} />
           </div>
 
-          <Section title="Recent Users">
+          <Section title="Users & Activity">
             <ul className="divide-y divide-border/50">
               {d.users.map((u) => (
-                <li key={u.id} className="p-3 flex justify-between text-sm">
-                  <div className="truncate">{u.display_name ?? "—"} <span className="text-muted-foreground">· {u.id.slice(0, 8)}</span></div>
-                  <div className="text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</div>
+                <li key={u.id} className="p-3 flex flex-wrap items-center justify-between gap-2 text-sm">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium truncate">{u.display_name ?? u.email ?? u.id.slice(0, 8)}</div>
+                    <div className="text-xs text-muted-foreground truncate">{u.email ?? "—"}</div>
+                  </div>
+                  <div className="text-xs text-right">
+                    <div>{u.page_views} views</div>
+                    <div className="text-muted-foreground">
+                      {u.last_sign_in_at ? `Last login ${new Date(u.last_sign_in_at).toLocaleString()}` : "Never signed in"}
+                    </div>
+                  </div>
                 </li>
               ))}
+            </ul>
+          </Section>
+
+          <Section title="Recent Page Views">
+            <ul className="divide-y divide-border/50">
+              {d.recentViews.map((v) => (
+                <li key={v.id} className="p-3 flex justify-between gap-3 text-sm">
+                  <div className="min-w-0">
+                    <div className="truncate font-medium">{v.email ?? v.user_id.slice(0, 8)}</div>
+                    <div className="text-xs text-muted-foreground truncate">{v.path}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground whitespace-nowrap">{new Date(v.created_at).toLocaleString()}</div>
+                </li>
+              ))}
+              {d.recentViews.length === 0 && (
+                <li className="p-3 text-sm text-muted-foreground">No page views logged yet.</li>
+              )}
             </ul>
           </Section>
 

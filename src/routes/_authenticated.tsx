@@ -1,6 +1,8 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { logPageView } from "@/lib/page-views.functions";
 import { Shield, LayoutDashboard, Globe, Mail, Lock, MessageSquare, Bot, LogOut, QrCode, Receipt, ShoppingBag, Scan, FileCheck2, UserCircle2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +15,8 @@ function AuthGate() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const log = useServerFn(logPageView);
 
   useEffect(() => {
     let mounted = true;
@@ -28,6 +32,11 @@ function AuthGate() {
     });
     return () => { mounted = false; sub.subscription.unsubscribe(); };
   }, [navigate]);
+
+  useEffect(() => {
+    if (!ready) return;
+    log({ data: { path: pathname } }).catch(() => {});
+  }, [ready, pathname, log]);
 
   if (!ready) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Loading…</div>;
 
